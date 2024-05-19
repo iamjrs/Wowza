@@ -50,6 +50,11 @@ function GetKeybind(ability_name)
    local spellTexture = GetSpellTexture(ability_name)
    local keybinds = {}
    
+   if not spellTexture then
+      local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expansionID, setID, isCraftingReagent = C_Item.GetItemInfo(ability_name)
+      spellTexture = itemTexture
+   end
+
    if spellTexture then
      
      local actionBindingMap = {

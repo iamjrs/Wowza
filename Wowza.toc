@@ -4,3 +4,6 @@
 ## Author: iamjrs
 
 Wowza.lua
+group.lua
+unit.lua
+aura.lua

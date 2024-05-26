@@ -14,7 +14,9 @@ function GetGroup()
        if UnitExists(unit) then
            group[unit]            = {}
            group[unit]['keybind'] = partyKeys[p]
-       end
+       else
+         break
+      end
    end
 
    for n,modKey in pairs(modKeys) do
@@ -25,11 +27,13 @@ function GetGroup()
    end
 
    for r=1,36 do
-       local unit = 'raid' .. r
-       if UnitExists(unit) then
-           group[unit]            = {}
-           group[unit]['keybind'] = raidKeys[r]
-       end
+      local unit = 'raid' .. r
+      if UnitExists(unit) then
+         group[unit]            = {}
+         group[unit]['keybind'] = raidKeys[r]
+      else
+         break
+      end
    end
 
    for unit,info in pairs(group) do
@@ -225,6 +229,8 @@ end
 
 function UpdateWowza()
 
+   Wowza.group = Wowza.Group:new()
+
    local auras = parse_auras('Wowza')
 
    for a,b in pairs(WeakAurasSaved.displays) do
@@ -288,7 +294,11 @@ function UpdateWowza()
       
    end
 
-Wowza = {}
+Wowza       = {}
+Wowza.Group = {}
+Wowza.Unit  = {}
+Wowza.Aura  = {}
+
 Wowza['lastCast'] = nil
 
 local frame = CreateFrame('Frame')

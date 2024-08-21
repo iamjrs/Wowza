@@ -1,5 +1,7 @@
-require("group")
+local group = {
+    test = 'yes'
+}
 
-local group = Group:new()
+local x = 'test'
 
-print(group.members[1].id)
+print(group[x])

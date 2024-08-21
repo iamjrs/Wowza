@@ -51,10 +51,24 @@ end
 
 function GetKeybind(ability_name)
 
-   local spellTexture = GetSpellTexture(ability_name)
+   local spellTexture
+
+   if type(ability_name) == 'string' then
+      spellTexture = GetSpellTexture(ability_name)
+
+   elseif type(ability_name) == 'number' then
+      spellTexture = ability_name
+   end
+
    local keybinds = {}
-   
+   local keybind = ""
+
    if not spellTexture then
+      -- .delay
+      -- .depth
+      -- .time
+      -- .wait
+      
       local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expansionID, setID, isCraftingReagent = C_Item.GetItemInfo(ability_name)
       spellTexture = itemTexture
    end
@@ -66,9 +80,9 @@ function GetKeybind(ability_name)
        {61,'MULTIACTIONBAR1BUTTON'},
        {49,'MULTIACTIONBAR2BUTTON'},
        {25,'MULTIACTIONBAR3BUTTON'},
-       {37,'MULTIACTIONBAR4BUTTON'}
+       {37,'MULTIACTIONBAR4BUTTON'},
      }
-     
+
      for bar=1,#actionBindingMap do
        
        local actionIndex  = actionBindingMap[bar][1]
@@ -86,7 +100,8 @@ function GetKeybind(ability_name)
          
          if spellTexture == texture or spellTexture == actionTexture then
            
-           local keybind = ""
+         --   local keybind = ""
+            keybind = ""
            
            if command then
              
@@ -97,15 +112,17 @@ function GetKeybind(ability_name)
              
            end
            
-           return keybind
+         --   return keybind
            
          end
          
        end
        
      end
-     
+
    end
+
+   return keybind
    
  end
 
@@ -231,6 +248,15 @@ function UpdateWowza()
 
    Wowza.group = Wowza.Group:new()
 
+   local focus_name, _ = UnitName('focus')
+
+   if focus_name ~= Wowza.focus.name then
+      Wowza.focus.name = focus_name
+      Wowza.focus.last_change = GetTime()
+   end
+
+   Wowza.focus.time_since_change = GetTime() - Wowza.focus.last_change
+
    local auras = parse_auras('Wowza')
 
    for a,b in pairs(WeakAurasSaved.displays) do
@@ -262,44 +288,50 @@ function UpdateWowza()
 
       if isActive == true then
 
-         if string.find(data.customText, 'aura_env') then
+         if data.customText and string.find(data.customText, 'aura_env') then
 
             local func = WeakAuras.LoadFunction('return ' .. data.triggers[1].trigger.custom)
             local keybind = func()
             if keybind then
-               if auraName ~= Wowza.lastCast then
+               if auraName ~= Wowza.last_cast then
                   print(auraName)
-                  Wowza.lastCast = auraName
+                  Wowza.last_cast = auraName
                end
                return KeybindToRegion(keybind)
             end
 
-         else
+         else if data.customText then
 
             local func = WeakAuras.LoadFunction('return ' .. data.customText)
             local keybind = func()
 
             if keybind then
-               if auraName ~= Wowza.lastCast then
+               if auraName ~= Wowza.last_cast then
                   print(auraName)
-                  Wowza.lastCast = auraName
+                  Wowza.last_cast = auraName
                end
                return KeybindToRegion(keybind)
             end
-
-         end
-
          end
       end
-      
+
+      end
    end
+   
+end
 
 Wowza       = {}
 Wowza.Group = {}
 Wowza.Unit  = {}
 Wowza.Aura  = {}
 
-Wowza['lastCast'] = nil
+Wowza.last_cast = nil
+
+Wowza.focus = {
+   name = nil,
+   last_change = 0,
+   time_since_change = 0
+}
 
 local frame = CreateFrame('Frame')
 frame:SetScript("OnUpdate", UpdateWowza)

@@ -299,7 +299,7 @@ function UpdateWowza()
             local keybind = func()
             if keybind then
                if auraName ~= Wowza.last_cast then
-                  print(auraName)
+                  -- print(auraName)
                   Wowza.last_cast = auraName
                end
                return KeybindToRegion(keybind)
@@ -312,7 +312,7 @@ function UpdateWowza()
 
             if keybind then
                if auraName ~= Wowza.last_cast then
-                  print(auraName)
+                  -- print(auraName)
                   Wowza.last_cast = auraName
                end
                return KeybindToRegion(keybind)

@@ -50,19 +50,19 @@ function GetGroup()
 end
 
 function GetKeybind(ability_name)
-
+   
    local spellTexture
-
+   
    if type(ability_name) == 'string' then
-      spellTexture = GetSpellTexture(ability_name)
-
+      spellTexture = C_Spell.GetSpellTexture(ability_name)
+      
    elseif type(ability_name) == 'number' then
       spellTexture = ability_name
    end
-
+   
    local keybinds = {}
    local keybind = ""
-
+   
    if not spellTexture then
       -- .delay
       -- .depth
@@ -72,59 +72,64 @@ function GetKeybind(ability_name)
       local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemTexture, sellPrice, classID, subclassID, bindType, expansionID, setID, isCraftingReagent = C_Item.GetItemInfo(ability_name)
       spellTexture = itemTexture
    end
-
+   
    if spellTexture then
-     
-     local actionBindingMap = {
-       {1,'ACTIONBUTTON'},
-       {61,'MULTIACTIONBAR1BUTTON'},
-       {49,'MULTIACTIONBAR2BUTTON'},
-       {25,'MULTIACTIONBAR3BUTTON'},
-       {37,'MULTIACTIONBAR4BUTTON'},
-     }
-
-     for bar=1,#actionBindingMap do
-       
-       local actionIndex  = actionBindingMap[bar][1]
-       local bindingLabel = actionBindingMap[bar][2]
-       
-       for slot=1,12 do
+      --print(spellTexture)
+      
+      local actionBindingMap = {
+         {1,'ACTIONBUTTON'},
+         {61,'MULTIACTIONBAR1BUTTON'},
+         {49,'MULTIACTIONBAR2BUTTON'},
+         {25,'MULTIACTIONBAR3BUTTON'},
+         {37,'MULTIACTIONBAR4BUTTON'},
+      }
+      
+      for bar=1,#actionBindingMap do
          
-         local actionId                = actionIndex-1 + slot
-         local type, globalId, subType = GetActionInfo(actionId)
-         local texture                 = GetSpellTexture(globalId)
-         local actionTexture           = GetActionTexture(actionId)
+         local actionIndex  = actionBindingMap[bar][1]
+         local bindingLabel = actionBindingMap[bar][2]
          
-         local bindingId               = bindingLabel .. slot
-         local command, key1, key2     = GetBindingKey(bindingId)
-         
-         if spellTexture == texture or spellTexture == actionTexture then
-           
-         --   local keybind = ""
-            keybind = ""
-           
-           if command then
-             
-             if string.find(command, 'CTRL') then keybind = keybind .. "C" end
-             if string.find(command, 'SHIFT') then keybind = keybind .. "S" end
-             if string.find(command, 'ALT') then keybind = keybind .. "A" end
-             keybind = keybind .. string.sub(command,-1,-1)
-             
-           end
-           
-         --   return keybind
-           
+         for slot=1,12 do
+            
+            local actionId                = actionIndex-1 + slot
+            local type, globalId, subType = GetActionInfo(actionId)
+            
+            if globalId then
+               local texture              = C_Spell.GetSpellTexture(globalId)
+            end
+            
+            local actionTexture           = GetActionTexture(actionId)
+            
+            local bindingId               = bindingLabel .. slot
+            local command, key1, key2     = GetBindingKey(bindingId)
+            
+            if spellTexture == texture or spellTexture == actionTexture then
+               
+               --   local keybind = ""
+               keybind = ""
+               
+               if command then
+                  
+                  if string.find(command, 'CTRL') then keybind = keybind .. "C" end
+                  if string.find(command, 'SHIFT') then keybind = keybind .. "S" end
+                  if string.find(command, 'ALT') then keybind = keybind .. "A" end
+                  keybind = keybind .. string.sub(command,-1,-1)
+                  
+               end
+               
+               return keybind
+               
+            end
+            
          end
          
-       end
-       
-     end
-
+      end
+      
    end
-
+   
    return keybind
    
- end
+end
 
 function parse_auras(auraName)
    

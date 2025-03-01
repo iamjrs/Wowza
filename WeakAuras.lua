@@ -35,6 +35,7 @@ function WeakAuras.WaitOnHekiliTrigger()
   -- Druid
   rangeChecks["Swipe"] = "Ferocious Bite"
   rangeChecks["Brutal Slash"] = "Ferocious Bite"
+  rangeChecks["Primal Wrath"] = "Ferocious Bite"
 
   -- Shaman
   rangeChecks["Surging Totem"] = "Stormstrike"

@@ -4,6 +4,7 @@
 ## Author: iamjrs
 
 Wowza.lua
+WeakAuras.lua
 group.lua
 unit.lua
 aura.lua

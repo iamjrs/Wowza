@@ -329,7 +329,7 @@ Wowza       = {}
 Wowza.Group = {}
 Wowza.Unit  = {}
 Wowza.Aura  = {}
-
+Wowza.WeakAuras = {}
 Wowza.last_cast = nil
 
 Wowza.focus = {
